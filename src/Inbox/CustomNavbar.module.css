@@ -1,0 +1,11 @@
+.navbox {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.icon {
+  position: relative;
+  width: 27px;
+  height: 35px;
+  justify-content: center;
+  right: -873px;
+}
