@@ -1,6 +1,46 @@
+body {
+  overflow-x: hidden;
+}
+
 .tableBox {
   margin: 175px;
   position: relative;
   top: -57px;
   left: -142px;
+}
+
+.mailBox {
+  position: relative;
+  top: 80px;
+  left: 4%;
+}
+
+.read {
+  position: absolute;
+  right: 14px;
+  top: 17px;
+}
+
+.blueDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: blue;
+  margin-right: 12px;
+}
+
+.tableContainer {
+  overflow-x: hidden;
+}
+
+.oveflowCell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bodyCell {
+  max-width: 160px;
+  overflow: hidden;
 }

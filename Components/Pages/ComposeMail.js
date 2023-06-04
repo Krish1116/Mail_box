@@ -24,18 +24,18 @@ const ComposeMail = () => {
     const enteredSub = subInputRef.current.value;
 
     const receivedEmail = enteredEmail.replace(".", "").replace("@", "");
-    const sendEmail = localStorage.getItem("email");
-    console.log(sendEmail);
+    const sendEmail = localStorage.getItem("emailId");
+    // console.log(sendEmail);
     const emailSender = sendEmail.replace(".", "").replace("@", "");
 
     const objSent = {
-      to: receivedEmail,
+      to: enteredEmail,
       subject: enteredSub,
       message: mssg,
     };
 
     const objRecieved = {
-      from: emailSender,
+      from: sendEmail,
       subject: enteredSub,
       message: mssg,
     };
@@ -60,7 +60,7 @@ const ComposeMail = () => {
           method: "PATCH",
           body: JSON.stringify({
             id: data.name,
-            read: true,
+            read: false,
           }),
         }
       );
@@ -71,7 +71,7 @@ const ComposeMail = () => {
           from: objRecieved.from,
           subject: objRecieved.subject,
           message: objRecieved.message,
-          read: true,
+          read: false,
         })
       );
     });

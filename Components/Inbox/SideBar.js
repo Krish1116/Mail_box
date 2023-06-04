@@ -7,112 +7,144 @@ import {
   CDBSidebarMenuItem,
 } from "cdbreact";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SentMail from "./SentMail";
 import ReceivedMail from "./ReceivedMail";
+import { mailUserAction } from "../Store/MailAction";
+import { Badge } from "react-bootstrap";
 
 const Sidebar = () => {
   const email = localStorage.getItem("emailId");
   const emailsender = email.replace(".", "").replace("@", "");
   const dispatch = useDispatch();
 
-  const [activeSection, setActiveSection] = useState("sent");
-  const [sentMails, setSentMails] = useState([]);
-  const [receivedEmail, setReceivedMails] = useState([]);
+  const [activeSection, setActiveSection] = useState("received");
+  const sentMails = useSelector((state) => state.userMail.sentUserMails);
+  const receivedEmail = useSelector(
+    (state) => state.userMail.receivedUserMails
+  );
+  const unreadCount = receivedEmail.filter((mail) => !mail.read).length;
 
   useEffect(() => {
-    fetch(
-      `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/sent.json`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch sent mails");
+    const fetchSentMails = () => {
+      fetch(
+        `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/sent.json`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        const data = await res.json();
-        const sentmail = Object.values(data);
-        setSentMails(sentmail);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      )
+        .then(async (res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch sent mails");
+          }
+          const data = await res.json();
+          const sentmail = Object.values(data);
+          dispatch(mailUserAction.updateSentMails(sentmail));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
-    fetch(
-      `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/received.json`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch received mails");
+    const fetchReceivedMails = () => {
+      fetch(
+        `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/received.json`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        const data = await res.json();
-        const receivedMail = Object.values(data);
-        setReceivedMails(receivedMail);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      )
+        .then(async (res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch received mails");
+          }
+          const data = await res.json();
+          const receivedMail = Object.values(data);
+          dispatch(mailUserAction.updateReceivedMails(receivedMail));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const interval = setInterval(() => {
+      fetchSentMails();
+      fetchReceivedMails();
+    }, 2000);
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(interval);
   }, [emailsender]);
 
   const sentMailHandler = (e) => {
+    console.log("clicked");
     e.preventDefault();
-    fetch(
-      `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/sent.json`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch sent emails");
-        }
-        const data = await res.json();
 
-        const sentEmails = Object.values(data);
-        setSentMails(sentEmails); // Update the sent mails state
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setActiveSection("sent");
+    try {
+      fetch(
+        `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/sent.json`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch sent emails");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data && typeof data === "object") {
+            const sentMail = Object.values(data);
+            console.log(sentMail);
+            setActiveSection("sent");
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const recivedMailHandler = (e) => {
     e.preventDefault();
-    fetch(
-      `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/received.json`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch received emails");
+    try {
+      fetch(
+        `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailsender}/received.json`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        const data = await res.json();
-        const receivedEmails = Object.values(data);
-        setReceivedMails(receivedEmails); // Update the received mails state
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setActiveSection("received");
+      )
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch sent emails");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          if (data && typeof data === "object") {
+            const receivemail = Object.values(data).map((mail) => ({
+              ...mail,
+              read: mail.read || false,
+            }));
+            setActiveSection("received");
+            dispatch(mailUserAction.updateReceivedMails(receivemail)); // Dispatch the action with the updated received emails
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -138,6 +170,11 @@ const Sidebar = () => {
             <NavLink activeclassname="activeClicked">
               <CDBSidebarMenuItem icon="inbox" onClick={recivedMailHandler}>
                 Inbox
+                {receivedEmail.filter((mail) => !mail.read).length > 0 && (
+                  <Badge pill variant="danger" className="m-3">
+                    {unreadCount}
+                  </Badge>
+                )}
               </CDBSidebarMenuItem>
             </NavLink>
             <NavLink to="/profile" activeclassname="activeClicked">
@@ -151,12 +188,6 @@ const Sidebar = () => {
       </CDBSidebar>
 
       <div>
-        {/* Display sent mails */}
-        {/* {sentMails.length === 0 ? (
-          <h1 style={{ padding: "6rem" }}>No New Mails</h1>
-        ) : (
-          <SentMail sentMails={sentMails} />
-        )} */}
         {activeSection === "sent" && (
           <>
             {sentMails.length === 0 ? (
