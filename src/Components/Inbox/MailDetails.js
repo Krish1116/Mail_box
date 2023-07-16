@@ -10,6 +10,8 @@ const MailDetails = () => {
   const subject = searchParams.get("subject");
   const body = searchParams.get("body");
   const type = searchParams.get("type");
+  // console.log(body);
+  // console.log(type);
 
   return (
     <div style={{ padding: "20px", backgroundColor: "#f5f5f5" }}>

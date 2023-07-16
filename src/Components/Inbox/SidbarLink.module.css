@@ -1,0 +1,35 @@
+.nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  top: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: white 0.2s ease;
+}
+
+.navActive {
+  position: relative;
+  left: -1rem;
+  margin-bottom: 1rem;
+  top: 1rem;
+}
+
+.nav:hover {
+  background-color: rgba(245, 245, 220, 0.712);
+}
+
+h2 {
+  font-size: large;
+  font-family: raleway;
+  font-weight: bold;
+  position: relative;
+  top: 5px;
+}
+
+.icon {
+  font-size: 1rem;
+}

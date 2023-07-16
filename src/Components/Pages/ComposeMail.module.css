@@ -1,0 +1,31 @@
+.mainBox {
+  top: 0rem;
+  position: relative;
+  height: 31rem;
+  width: 81rem;
+  /* max-height: "100vh"; */
+}
+
+.home {
+  position: relative;
+  right: -63rem;
+  top: 21px;
+}
+
+@media only screen and (max-width: 576px) {
+  .mainBox {
+    overflow-x: hidden;
+    height: 34rem;
+  }
+
+  .home {
+    position: relative;
+    left: 12rem;
+    font-size: small;
+    top: 17px;
+  }
+  .formContainer {
+    margin-top: 2rem;
+    width: 18rem;
+  }
+}

@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
-import { Alert, Button, FloatingLabel, Form, Spinner } from "react-bootstrap";
+import { Alert, FloatingLabel, Form, Spinner } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { authAction } from "../Store/Auth";
+import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
   const emailInputRef = useRef();
@@ -10,6 +13,7 @@ const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const switchSignInToLogIn = () => {
     setIsLogin((prevState) => !prevState);
@@ -69,7 +73,7 @@ const AuthForm = () => {
         passwordInputRef.current.value = "";
 
         if (res.ok) {
-          navigate("/home");
+          navigate("/inbox");
           return res.json();
         } else {
           return res.json().then((data) => {
@@ -83,12 +87,13 @@ const AuthForm = () => {
       .then((data) => {
         localStorage.setItem("token", data.idToken);
         localStorage.setItem("emailId", data.email);
+        dispatch(authAction.login(data.idToken));
 
         if (!isLogin) {
           switchSignInToLogIn();
           setResponse(null);
         } else {
-          navigate("/home");
+          navigate("/inbox");
         }
       })
       .catch((err) => {
@@ -101,101 +106,90 @@ const AuthForm = () => {
 
   return (
     <>
-      {!isLoading && (
-        <h1 className="text-center mt-5">{isLogin ? "Login" : "Signup"}</h1>
-      )}
-      {response && <Alert variant="danger">{response}</Alert>}
-      <Form
-        className="box"
-        onSubmit={submitHandler}
-        style={{ position: "relative", margin: "102px" }}
-      >
-        <FloatingLabel
-          controlId="floatingInput"
-          label="Email address (required)"
-          className="mb-3 w-50 mx-auto"
+      <div className={classes.auth}>
+        {!isLoading && (
+          <h1 className={classes.text_title}>{isLogin ? "Login" : "Signup"}</h1>
+        )}
+        {response && <Alert variant="danger">{response}</Alert>}
+        <Form
+          onSubmit={submitHandler}
+          className={isLoading ? classes.formLoad : classes.form_s}
         >
-          <Form.Control
-            type="email"
-            placeholder="name@example.com"
-            className="lbl"
-            ref={emailInputRef}
-          />
-        </FloatingLabel>
-        <FloatingLabel
-          controlId="floatingPassword"
-          label="Password (required)"
-          className="w-50 mx-auto mb-3"
-        >
-          <Form.Control
-            type="password"
-            placeholder="password"
-            className="lbl"
-            ref={passwordInputRef}
-          />
-        </FloatingLabel>
-        {!isLogin && (
           <FloatingLabel
-            controlId="floatingConfirmPassword"
-            label="Confirm Password (required)"
-            className="w-50 mx-auto"
+            controlId="floatingInput"
+            label="Email address (required)"
+            // className="mb-3 w-72 mx-auto"
+            className={classes.lbl}
+          >
+            <Form.Control
+              type="email"
+              placeholder="name@example.com"
+              ref={emailInputRef}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingPassword"
+            label="Password (required)"
+            className={classes.lbl}
           >
             <Form.Control
               type="password"
               placeholder="password"
-              className="lbl"
-              ref={confirmPasswordInputRef}
+              ref={passwordInputRef}
             />
           </FloatingLabel>
-        )}
-        <div>
-          {isLogin && (
+          {!isLogin && (
+            <FloatingLabel
+              controlId="floatingConfirmPassword"
+              label="Confirm Password (required)"
+              className={classes.lbl}
+            >
+              <Form.Control
+                type="password"
+                placeholder="password"
+                ref={confirmPasswordInputRef}
+              />
+            </FloatingLabel>
+          )}
+          <div>
+            {isLogin && (
+              <Link to="/forgotpassword" className={classes.pass}>
+                Forgot Password?
+              </Link>
+            )}
+          </div>
+          <div>
+            {!isLoading && (
+              <button className={classes.bttn}>
+                {isLogin ? "Login" : "Create Your Account"}
+              </button>
+            )}
+            {isLoading && (
+              // <div className="row align-items-center mt-4">
+              <div className={classes.loading_container}>
+                <div>
+                  <h5>Loading</h5>
+                </div>
+                <div>
+                  <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                  </Spinner>
+                </div>
+              </div>
+            )}
+          </div>
+          <div style={{ textAlign: "center" }}>
             <Link
-              to="/forgotpassword"
-              style={{ position: "relative", right: "-64%" }}
+              className={isLoading ? classes.changeLoad : classes.change}
+              onClick={switchSignInToLogIn}
             >
-              Forgot Password?
+              {isLogin
+                ? "New Here? Sign up"
+                : "If Already have an account? Login"}
             </Link>
-          )}
-        </div>
-        <div className="d-flex justify-content-center">
-          {!isLoading && (
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="mt-3 w-50 mb-5"
-            >
-              {isLogin ? "Login" : "Create Your Account"}
-            </Button>
-          )}
-          {isLoading && (
-            <div className="row align-items-center mt-4">
-              <div className="col-auto">
-                <h5>Loading</h5>
-              </div>
-              <div className="col-auto">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden"></span>
-                </Spinner>
-              </div>
-            </div>
-          )}
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <Link
-            style={{
-              fontSize: "medium",
-              fontWeight: "bold",
-            }}
-            onClick={switchSignInToLogIn}
-          >
-            {isLogin
-              ? "New Here? Sign up"
-              : "If Already have an account? Login"}
-          </Link>
-        </div>
-      </Form>
+          </div>
+        </Form>
+      </div>
     </>
   );
 };

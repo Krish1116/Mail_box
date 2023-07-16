@@ -4,6 +4,7 @@ import { Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { mailUserAction } from "../Store/MailAction";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const ReceivedMail = () => {
   const navigation = useNavigate();
@@ -46,13 +47,16 @@ const ReceivedMail = () => {
         });
     }
 
+    const messageText = selected.message.blocks[0].text;
+
     const queryParams = new URLSearchParams({
       to: selected.to,
       from: selected.from,
       subject: selected.subject,
-      body: selected.message,
+      body: messageText,
       type: "received",
     });
+    console.log(queryParams);
     navigation(`/details?${queryParams.toString()}`);
   };
 
@@ -80,62 +84,98 @@ const ReceivedMail = () => {
       });
   };
 
-  return (
-    <>
-      <h4 className={classes.mailBox}>Receive Mails</h4>
+  let mobile = window.innerWidth <= 567;
 
-      <Table striped bordered hover className={classes.tableBox}>
-        <colgroup>
-          <col style={{ width: "2%" }} />
-          <col style={{ width: "3%" }} />
-          <col style={{ width: "10%" }} />
-          <col style={{ width: "6%" }} />
-        </colgroup>
-        <thead>
-          <tr>
-            <th>From</th>
-            <th>Subject</th>
-            <th>Body</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
+  return (
+    <div>
+      <h4 className={classes.mailBox}>Receive Mails</h4>
+      {mobile ? (
+        <div className={classes.mobileContainer}>
           {receivedMails
-            .filter((mail) => Object.keys(mail).length !== 0)
+            .filter((mail) => mail && Object.keys(mail).length !== 0)
             .map((mail, idx) => (
-              <tr
+              <div
                 key={idx}
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   handleMailClick(mail.id);
                 }}
               >
-                <td className={`${classes.oveflowCell} ${classes.bodyCell}`}>
-                  {mail.read ? null : <span className={classes.blueDot} />}
-                  {mail.from}
-                </td>
-                <td className={`${classes.oveflowCell} ${classes.bodyCell}`}>
-                  {mail.subject}
-                </td>
-                <td className={`${classes.oveflowCell} ${classes.bodyCell}`}>
-                  {mail.message}
-                </td>
-                <td>
-                  <Button
-                    variant="danger"
-                    onClick={(e) => {
-                      handleDeleteClick(mail.id, e);
+                <div className={classes.mailTitle}>{mail.from}</div>
+                <div>{mail.subject}</div>
+                <div className={classes.mailMassg}>
+                  {mail.message.blocks[0].text}
+                </div>
+                <div className={classes.mailIcon}>
+                  <AiOutlineDelete
+                    onClick={(e) => handleDeleteClick(mail.id, e)}
+                  />
+                </div>
+              </div>
+            ))}
+        </div>
+      ) : (
+        <>
+          <Table striped bordered hover className={classes.tableBox}>
+            <colgroup>
+              <col className={classes.col_1} />
+              <col className={classes.col_2} />
+              <col className={classes.col_3} />
+              <col className={classes.col_4} />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>Subject</th>
+                <th>Body</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {receivedMails
+                .filter((mail) => Object.keys(mail).length !== 0)
+                .map((mail, idx) => (
+                  <tr
+                    key={idx}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      handleMailClick(mail.id);
                     }}
                   >
-                    {" "}
-                    Delete Mail
-                  </Button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
-    </>
+                    <td
+                      className={`${classes.oveflowCell} ${classes.bodyCell}`}
+                    >
+                      {mail.read ? null : <span className={classes.blueDot} />}
+                      {mail.from}
+                    </td>
+                    <td
+                      className={`${classes.oveflowCell} ${classes.bodyCell}`}
+                    >
+                      {mail.subject}
+                    </td>
+                    <td
+                      className={`${classes.oveflowCell} ${classes.bodyCell}`}
+                    >
+                      {mail.message.blocks[0].text}
+                    </td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={(e) => {
+                          handleDeleteClick(mail.id, e);
+                        }}
+                      >
+                        {" "}
+                        Delete Mail
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </>
+      )}
+    </div>
   );
 };
 

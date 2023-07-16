@@ -1,0 +1,158 @@
+.auth {
+  margin: 0rem auto;
+  position: relative;
+  top: 1rem;
+  width: 59%;
+  height: 32rem;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 37, 0.2);
+  padding: -0.5rem;
+  text-align: center;
+}
+
+.text_title {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding: 2rem;
+}
+
+.form_s {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 4rem;
+}
+
+.formLoad {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 3rem;
+  top: 6rem;
+}
+
+.lbl {
+  margin-bottom: 2rem;
+  width: 41rem;
+  font-size: medium;
+}
+
+.loading_container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 5rem;
+}
+
+/* CSS */
+.bttn {
+  width: 41rem;
+  position: relative;
+  right: 5rem;
+  height: 3rem;
+  background-color: #897eca;
+  border-radius: 1rem;
+  box-shadow: rgb(44 117 187 / 20%) 0 -25px 18px -14px inset,
+    rgb(44 91 187 / 15%) 0 1px 2px, rgb(44 117 187 / 15%) 0 2px 4px,
+    rgb(44 117 187 / 15%) 0 4px 8px, rgb(44 117 187 / 15%) 0 8px 16px,
+    rgb(44 101 187 / 15%) 0 16px 32px;
+  color: rgba(0, 8, 0, 0.781);
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.bttn:hover {
+  box-shadow: rgba(44, 146, 187, 0.35) 0 -25px 18px -14px inset,
+    rgba(44, 142, 187, 0.25) 0 1px 2px, rgba(44, 106, 187, 0.25) 0 2px 4px,
+    rgba(44, 142, 187, 0.25) 0 4px 8px, rgba(44, 123, 187, 0.25) 0 8px 16px,
+    rgba(44, 101, 187, 0.25) 0 16px 32px;
+  transform: scale(1.02);
+}
+
+.change {
+  font-size: medium;
+  font-weight: bold;
+  position: relative;
+  top: 2rem;
+  right: 4rem;
+  color: black;
+}
+
+.changeLoad {
+  position: relative;
+  top: 0rem;
+}
+
+.pass {
+  position: relative;
+  top: -1rem;
+  left: 11rem;
+  font-weight: bold;
+  color: black;
+}
+
+@media only screen and (max-width: 576px) {
+  .auth {
+    width: 17rem;
+  }
+
+  .text_title {
+    text-align: center;
+  }
+
+  .lbl {
+    width: 15rem;
+  }
+
+  .form_s {
+    position: relative;
+    left: 1rem;
+  }
+
+  .bttn {
+    width: 15rem;
+    position: relative;
+    left: -1rem;
+  }
+
+  .change {
+    position: relative;
+    top: 2rem;
+    font-size: small;
+    right: 1rem;
+  }
+
+  .pass {
+    position: relative;
+    top: -1rem;
+    left: 3rem;
+    font-size: small;
+  }
+
+  .formLoad {
+    position: relative;
+    left: 1rem;
+  }
+
+  .changeLoad {
+    position: relative;
+    top: 0rem;
+    left: -1rem;
+  }
+}

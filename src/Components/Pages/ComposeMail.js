@@ -5,15 +5,17 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import classes from "./ComposeMail.module.css";
 import { useDispatch } from "react-redux";
 import { emailActions } from "../Store/mail";
+import { useNavigate } from "react-router-dom";
 
 const ComposeMail = () => {
   const emailInputRef = useRef();
   const subInputRef = useRef();
   const [mssg, setMssg] = useState();
   const dispatch = useDispatch();
+  const navigation = useNavigate();
 
-  const refHandler = (event) => {
-    setMssg(event.blocks[0].text);
+  const refHandler = (conteState) => {
+    setMssg(conteState);
   };
 
   const emailHandler = async (e) => {
@@ -22,21 +24,24 @@ const ComposeMail = () => {
     const enteredSub = subInputRef.current.value;
 
     const receivedEmail = enteredEmail.replace(".", "").replace("@", "");
-    const sendEmail = localStorage.getItem("email");
-    console.log(sendEmail);
+    const sendEmail = localStorage.getItem("emailId");
+    // console.log(sendEmail);
     const emailSender = sendEmail.replace(".", "").replace("@", "");
 
     const objSent = {
-      to: receivedEmail,
+      to: enteredEmail,
       subject: enteredSub,
       message: mssg,
     };
 
+    console.log(objSent);
+
     const objRecieved = {
-      from: emailSender,
+      from: sendEmail,
       subject: enteredSub,
       message: mssg,
     };
+    console.log(objRecieved);
 
     fetch(
       `https://mailbox-761c7-default-rtdb.firebaseio.com/${receivedEmail}/received.json`,
@@ -51,14 +56,14 @@ const ComposeMail = () => {
       }
     ).then(async (res) => {
       const data = await res.json();
-
+      console.log(data);
       fetch(
         `https://mailbox-761c7-default-rtdb.firebaseio.com/${receivedEmail}/received/${data.name}.json`,
         {
           method: "PATCH",
           body: JSON.stringify({
             id: data.name,
-            read: true,
+            read: false,
           }),
         }
       );
@@ -69,7 +74,7 @@ const ComposeMail = () => {
           from: objRecieved.from,
           subject: objRecieved.subject,
           message: objRecieved.message,
-          read: true,
+          read: false,
         })
       );
     });
@@ -87,6 +92,7 @@ const ComposeMail = () => {
       }
     ).then(async (res) => {
       const data = await res.json();
+      console.log(data);
 
       fetch(
         `https://mailbox-761c7-default-rtdb.firebaseio.com/${emailSender}/sent/${data.name}.json`,
@@ -109,13 +115,26 @@ const ComposeMail = () => {
 
     alert("sent successfully");
     console.log("sent successfully");
+
+    emailInputRef.current.value = "";
+    subInputRef.current.value = "";
+    setMssg(""); // Clear the editor content
+    navigation("/inbox");
+  };
+
+  const goHomeHandler = () => {
+    navigation("/inbox");
   };
 
   return (
     <Container className={classes.mainBox}>
+      <Button onClick={goHomeHandler} className={classes.home}>
+        Go To Home{" "}
+      </Button>
+
       <Row>
         <Col xs={10}>
-          <Form>
+          <Form className={classes.formContainer}>
             <Form.Group>
               <Form.Label>To</Form.Label>
               <Form.Control

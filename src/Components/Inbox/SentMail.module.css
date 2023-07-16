@@ -1,0 +1,93 @@
+body {
+  overflow-x: hidden;
+}
+
+.tableBox {
+  position: relative;
+  bottom: 27rem;
+  left: 12rem;
+  width: 68rem !important;
+}
+
+.mailBox {
+  position: relative;
+  bottom: 29rem;
+  left: 12rem;
+}
+
+.read {
+  position: absolute;
+  right: 14px;
+  top: 17px;
+}
+
+.blueDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: blue;
+  margin-right: 12px;
+}
+
+.tableContainer {
+  overflow-x: hidden;
+}
+
+.oveflowCell {
+  white-space: nowrap;
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+}
+
+.bodyCell {
+  max-width: 160px;
+  overflow: hidden;
+}
+
+.col_1 {
+  width: 2%;
+}
+
+.col_2 {
+  width: 3%;
+}
+
+.col_3 {
+  width: 10%;
+}
+.col_4 {
+  width: 6%;
+}
+
+.mobileContainer {
+  position: relative;
+  bottom: 27.5rem;
+  left: 4rem;
+}
+
+.mailTitle {
+  font-weight: bold;
+  font-size: medium;
+  position: relative;
+}
+
+.mailMassg {
+  white-space: nowrap;
+  width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mailIcon {
+  position: relative;
+  bottom: 4.6rem;
+  left: 14rem;
+}
+
+@media only screen and (max-width: 576px) {
+  .mailBox {
+    position: relative;
+    left: 5rem;
+  }
+}

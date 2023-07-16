@@ -1,0 +1,59 @@
+.navbox {
+  background-color: rgb(5 11 89);
+  height: 4rem;
+  color: white;
+}
+
+.mail {
+  position: relative;
+  left: 1rem;
+  top: 1rem;
+  font-size: larger;
+}
+
+.search {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -1rem;
+  width: 42rem;
+  left: 17rem;
+}
+
+.icon {
+  position: relative;
+  width: 2rem;
+  height: 1rem;
+  margin-top: 0rem;
+  align-items: center;
+  justify-content: center;
+  left: 39rem;
+}
+
+@media only screen and (max-width: 576px) {
+  .navbox {
+    height: 3rem;
+  }
+
+  .mail {
+    position: relative;
+    left: 1rem;
+    top: 12px;
+    font-size: medium;
+  }
+
+  .search {
+    position: relative;
+    display: flex;
+    width: 13rem;
+    height: 2rem;
+    left: 5rem;
+  }
+
+  .icon {
+    position: relative;
+    left: 11rem;
+    color: black;
+  }
+}
